@@ -113,8 +113,10 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Calculator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SortingStation.cpp" />
+    <ClCompile Include="Structure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SortingStation.h" />
@@ -124,6 +126,10 @@
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="SortingStation.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Calculator.h" />
+    <ClInclude Include="Structure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

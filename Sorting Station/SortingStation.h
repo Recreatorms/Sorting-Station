@@ -2,6 +2,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_SortingStation.h"
+#include "Structure.h"
+#include "Calculator.h"
 
 class SortingStation : public QMainWindow
 {
