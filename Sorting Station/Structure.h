@@ -11,6 +11,7 @@ public:
 	int getPriority();
 
 	QString value;
+
 private:
 	int priority;
 };
@@ -21,7 +22,7 @@ public:
 	~NodeQueue();
 
 	NodeQueue* next;
-	Token* token;
+	Token token;
 };
 
 class NodeStack {
@@ -30,7 +31,7 @@ public:
 	~NodeStack();
 
 	NodeStack* next;
-	Token* token;
+	Token token;
 };
 
 class BinaryTree {
@@ -53,7 +54,7 @@ public:
 	Queue();
 	~Queue();
 
-	void enqueue(Token* token);
+	void enqueue(Token token);
 	void dequeue();
 	QString peek();
 	unsigned int currentSize();
@@ -70,11 +71,11 @@ public:
 	Stack();
 	~Stack();
 
-	void push(Token* value);
+	void push(Token value);
 	void pop();
-	Token* getTop();
+	Token getTop();
 
-	Token* operatorToken;
+	Token operatorToken;
 	unsigned int capacity;
 	NodeStack* top;
 };

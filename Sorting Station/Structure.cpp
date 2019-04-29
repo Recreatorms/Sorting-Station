@@ -128,7 +128,7 @@ Queue::~Queue()
 	delete last;
 }
 
-void Queue::enqueue(Token* token)
+void Queue::enqueue(Token token)
 {
 	if (first == nullptr) 
 	{
@@ -165,7 +165,7 @@ void Queue::dequeue()
 QString Queue::peek()
 {
 	if (first != nullptr) {
-		return first->token->value;
+		return first->token.value;
 	}
 }
 
@@ -189,7 +189,7 @@ Stack::~Stack()
 	delete top;
 }
 
-void Stack::push(Token* value)
+void Stack::push(Token value)
 {
 	if (top == nullptr) {
 		top = new NodeStack;
@@ -217,7 +217,7 @@ void Stack::pop()
 	}		
 }
 
-Token* Stack::getTop()
+Token Stack::getTop()
 {
 	if (top != nullptr)
 	{

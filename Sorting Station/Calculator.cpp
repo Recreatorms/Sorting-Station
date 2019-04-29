@@ -16,60 +16,77 @@ Calculator::~Calculator()
 	delete bt;
 }
 
-Token Calculator::Tokenize(QString expr)
+std::vector<Token> Calculator::Tokenize(QString expr)
 {
-	QStringList list;
-	list = expr.split(QRegExp("\\s+"));
-	Token token;
-	token.value = list[0];
-	token.getPriority();
-	return token;
+	std::vector <Token> tokens;
+	Token currentToken;
+	QString buf = "";
+	for (int i = 0; i < sizeof(expr); ++i) 
+	{
+		if (expr.at(i) == " ") 
+		{
+			continue;
+		}
+		buf += expr.at(i);
+	}
+
+	for (int i = 0; i < sizeof(buf); ++i)
+	{
+		if (buf.at(i) == "(")
+		{
+			currentToken.value = "(";
+			tokens.push_back(currentToken);
+		}
+	}
+	return tokens;
 }
 
-void Calculator::getRPN(Token* inputToken)
+void Calculator::getRPN(std::vector <Token>& tokens)
 {	
-	do	{		
-			bool isNumber;
-			int number = inputToken->value.toInt(&isNumber, 10);
-			if (isNumber == true)
+	for (int i = 0; i < tokens.size(); ++i)
+	{
+		Token inputToken = tokens[i];
+		bool isNumber;
+		int number = inputToken.value.toInt(&isNumber, 10);
+		if (isNumber == true)
+		{
+			RPN->enqueue(inputToken);
+		}
+		else
+		{
+			if (inputToken.value == "(")
 			{
-				RPN->enqueue(inputToken);
+				operatorStack->push(inputToken);
 			}
 			else
 			{
-				if (inputToken->value == "(")
+				if (inputToken.value == ")")
 				{
-					operatorStack->push(inputToken);
-				}
-				else
-				{
-					if (inputToken->value == ")")
+					while (operatorStack->getTop().value != "(")
 					{
-						while (operatorStack->getTop()->value != "(")
-						{
-							RPN->enqueue(operatorStack->getTop());
-							operatorStack->pop();
-							if (operatorStack == nullptr) {
-								//exception надо бы написать 
-							}
-						}
+						RPN->enqueue(operatorStack->getTop());
 						operatorStack->pop();
-						delete inputToken;
+						if (operatorStack == nullptr) {
+							//exception надо бы написать 
+						}
 					}
+					operatorStack->pop();
 				}
-				while (inputToken->getPriority() <= operatorStack->getTop()->getPriority())
-				{
-					RPN->enqueue(operatorStack->getTop());
-					operatorStack->pop();  //pop the top operator from the operator-stack and write it to output.
-				}
-				operatorStack->push(inputToken);
 			}
-	} while (inputToken != nullptr);
+			while (inputToken.getPriority() <= operatorStack->getTop().getPriority())
+			{
+				RPN->enqueue(operatorStack->getTop());
+				operatorStack->pop();  //pop the top operator from the operator-stack and write it to output.
+			}
+			operatorStack->push(inputToken);
+		}
+	
+	}
 	while (operatorStack != nullptr)
 	{
 		RPN->enqueue(operatorStack->getTop());
 		operatorStack->pop();
-		if (operatorStack->getTop()->value == "(")
+		if (operatorStack->getTop().value == "(")
 		{
 			// и тут тоже exception 
 		}
@@ -77,7 +94,21 @@ void Calculator::getRPN(Token* inputToken)
 }
 
 //
-//BinaryTree* Calculator::RPNtoBT(QString* RPN)
+/*
+	короч как я понял на лекции
+		нужно создать 2й стек
+		и с его помощью закидывать данные в дерево
+		хрен его знает
+		типа есть найс очередь
+		Queue RPN
+		(допустим получили её без ошибок)
+		и нужно закинуть ее примерно тем же способ как токены в стек и очередь, а из стека в очередь
+		то есть
+		берем RPN
+		кидаем на стек
+		со стека на бт
+*/
+//BinaryTree* Calculator::RPNtoBT(QString* RPN) //
 //{
 //	for (int i = sizeof(RPN); i > 0; --i)
 //	{
