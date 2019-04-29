@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
@@ -34,6 +35,7 @@ public:
     QGroupBox *groupBox;
     QGridLayout *gridLayout_2;
     QTextEdit *inputText;
+    QPushButton *SolveButton;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout;
     QTextEdit *outputText;
@@ -66,6 +68,13 @@ public:
 
         verticalLayout->addWidget(groupBox);
 
+        SolveButton = new QPushButton(centralWidget);
+        SolveButton->setObjectName(QStringLiteral("SolveButton"));
+        SolveButton->setCheckable(false);
+        SolveButton->setFlat(false);
+
+        verticalLayout->addWidget(SolveButton);
+
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         gridLayout = new QGridLayout(groupBox_2);
@@ -74,6 +83,7 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         outputText = new QTextEdit(groupBox_2);
         outputText->setObjectName(QStringLiteral("outputText"));
+        outputText->setReadOnly(true);
 
         gridLayout->addWidget(outputText, 0, 0, 1, 1);
 
@@ -94,6 +104,9 @@ public:
 
         retranslateUi(SortingStationClass);
 
+        SolveButton->setDefault(false);
+
+
         QMetaObject::connectSlotsByName(SortingStationClass);
     } // setupUi
 
@@ -101,6 +114,7 @@ public:
     {
         SortingStationClass->setWindowTitle(QApplication::translate("SortingStationClass", "SortingStation", 0));
         groupBox->setTitle(QApplication::translate("SortingStationClass", "\320\222\320\262\320\276\320\264", 0));
+        SolveButton->setText(QApplication::translate("SortingStationClass", "\320\222\321\213\321\207\320\270\321\201\320\273\320\270\321\202\321\214", 0));
         groupBox_2->setTitle(QApplication::translate("SortingStationClass", "\320\222\321\213\320\262\320\276\320\264", 0));
     } // retranslateUi
 

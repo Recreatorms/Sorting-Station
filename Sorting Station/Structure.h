@@ -1,63 +1,81 @@
 #pragma once
 #include <iostream>
-class Structure
+#include <QString>
+
+class Token
 {
 public:
-	Structure();
-	~Structure();
-	
-	int getValue();
-	int value;	
+	Token();
+	~Token();
+
+	int getPriority();
+
+	QString value;
+private:
+	int priority;
 };
 
-class Node : public Structure {
+class NodeQueue {
 public:
-	Node();
-	~Node();
-	
-	Node* next;
+	NodeQueue();
+	~NodeQueue();
+
+	NodeQueue* next;
+	Token* token;
 };
-class BinaryTree : public Structure {
+
+class NodeStack {
+public:
+	NodeStack();
+	~NodeStack();
+
+	NodeStack* next;
+	Token* token;
+};
+
+class BinaryTree {
 public:
 	BinaryTree();
 	~BinaryTree();
 
-	void addNode(BinaryTree *bt, int value);
-	BinaryTree* findNode(BinaryTree* bt, int value);
-	void printTree(BinaryTree* bt);
+	void addNode(BinaryTree *bt, QString value);
+	BinaryTree* findNode(BinaryTree* bt, QString value);
+
 	bool isNumber(BinaryTree * bt);
 
-	BinaryTree *left;
-	BinaryTree *right;
+	QString value;
+	BinaryTree* left;
+	BinaryTree* right;
 };
 
-class Queue : public Structure {
+class Queue {
 public:
 	Queue();
 	~Queue();
 
-	void enqueue(int value);
+	void enqueue(Token* token);
 	void dequeue();
-	int peek();
-	unsigned currentSize();
-	void printQueue();
+	QString peek();
+	unsigned int currentSize();
 
-	unsigned size;
-	Node* first;
-	Node* last;
+	unsigned int size;
+	NodeQueue* first;
+	NodeQueue* last;
 };
 
 
 
-class Stack : public Structure {
+class Stack {
 public:
 	Stack();
 	~Stack();
 
-	void push(Stack* stack, int value);
-	int pop(Stack* stack);
-	int getTop(Stack* stack);
-	void printStack();
-	unsigned capacity;
-	Node* top;
+	void push(Token* value);
+	void pop();
+	Token* getTop();
+
+	Token* operatorToken;
+	unsigned int capacity;
+	NodeStack* top;
 };
+

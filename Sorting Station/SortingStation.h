@@ -4,6 +4,7 @@
 #include "ui_SortingStation.h"
 #include "Structure.h"
 #include "Calculator.h"
+#include <QTextEdit>
 
 class SortingStation : public QMainWindow
 {
@@ -11,7 +12,10 @@ class SortingStation : public QMainWindow
 
 public:
 	SortingStation(QWidget *parent = Q_NULLPTR);
-
+	~SortingStation();
+private slots:
+	void calculateSlot();
 private:
-	Ui::SortingStationClass ui;
+	Ui::SortingStationClass* ui;
+	Calculator* pCalc;
 };

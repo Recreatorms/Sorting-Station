@@ -1,18 +1,44 @@
 #include "Structure.h"
 
 
-
-Structure::Structure()
+Token::Token()
 {
 }
 
-Structure::~Structure()
+Token::~Token()
 {
 }
 
-int Structure::getValue()
+int Token::getPriority()
 {
-	return value;
+	if (value == "^") {
+		return 9;
+	}
+	if (value == "~") { // unary negation (right-associative)
+		return 9;
+	}
+	if (value == "*") {
+		return 8;
+	}
+	if (value == "/") {
+		return 8;
+	}
+	if (value == "%") {
+		return 8;
+	}
+	if (value == "+") {
+		return 6;
+	}
+	if (value == "-") {
+		return 6;
+	}
+	if (value == "(") {
+		return -1;
+	}
+	if (value == ")") {
+		return 10;
+	}
+	return 0;
 }
 
 /***********************************************************
@@ -21,17 +47,21 @@ int Structure::getValue()
 
 BinaryTree::BinaryTree()
 {
+	left = nullptr;
+	right = nullptr;
 }
 
 BinaryTree::~BinaryTree()
 {
+	delete left;
+	delete right;
 }
 
-void BinaryTree::addNode(BinaryTree * bt, int value)
+void BinaryTree::addNode(BinaryTree * bt, QString value)
 {
 	if (this != nullptr) {
-		if (this->value > value) {
-			if (this->right == nullptr) {
+		if (this->value >= value) {
+			if (right == nullptr) {
 				right = new BinaryTree;
 				right->value = value;
 				right->left = nullptr;
@@ -53,9 +83,13 @@ void BinaryTree::addNode(BinaryTree * bt, int value)
 			}
 		}
 	}
+	else {
+		bt = new BinaryTree;
+		bt->value = value;
+	}
 }
 
-BinaryTree* BinaryTree::findNode(BinaryTree * bt, int value)
+BinaryTree* BinaryTree::findNode(BinaryTree * bt, QString value)
 {
 	if (this == nullptr)
 		return nullptr;
@@ -65,18 +99,6 @@ BinaryTree* BinaryTree::findNode(BinaryTree * bt, int value)
 		return findNode(right, value);
 	else
 		return findNode(left, value);
-}
-void BinaryTree::printTree(BinaryTree * bt)
-{
-	std::cout << "Current BinaryTree:\n";
-	if (this != nullptr)
-	{
-		if (left != nullptr)
-			printTree(left);
-		std::cout << value;
-		if (right != nullptr)
-			printTree(right);
-	}
 }
 
 bool BinaryTree::isNumber(BinaryTree* bt)
@@ -93,49 +115,63 @@ bool BinaryTree::isNumber(BinaryTree* bt)
 
 ************************************************************/
 
-Queue::Queue()
+Queue::Queue() 
 {
+	first = nullptr;
+	last = nullptr;
+	size = 0;
 }
 
 Queue::~Queue()
 {
+	delete first;
+	delete last;
 }
 
-void Queue::enqueue(int value)
+void Queue::enqueue(Token* token)
 {
-	Node* node = new Node;
-	node->next = last;
-	node->value = value;
-	last = node;
+	if (first == nullptr) 
+	{
+		first = new NodeQueue;
+		first->token = token;
+		first->next = nullptr;
+		last = first;
+		++size;
+	}
+	else 
+	{
+		NodeQueue* newNode = new NodeQueue;
+		newNode->next = last;
+		newNode->token = token;
+		last = newNode;
+		++size;
+	}
 }
 
 void Queue::dequeue()
 {	
 	--size;
-	delete first;
+	NodeQueue* node = last->next;
+	while (node->next != first)
+	{
+		node = last->next;	
+	}
+		delete first;
+		NodeQueue* newFirst;
+		newFirst = node;		
+		first = newFirst;		
 }
 
-int Queue::peek()
+QString Queue::peek()
 {
-	return first->value;
+	if (first != nullptr) {
+		return first->token->value;
+	}
 }
 
 unsigned Queue::currentSize()
 {
 	return size;
-}
-
-void Queue::printQueue()
-{
-	std::cout << "Current Queue = ";
-	if (last == nullptr && first == nullptr)
-		std::cout << "\0\n";
-	else
-	{
-		while (last->next != first)
-			std::cout << value << " ";
-		std::cout << std::endl;
-	}
 }
 
 /***********************************************************
@@ -144,83 +180,71 @@ void Queue::printQueue()
 
 Stack::Stack()
 {
+	top = nullptr;
+	capacity = 0;
 }
 
 Stack::~Stack()
 {
+	delete top;
 }
 
-void Stack::push(Stack * stack, int value)
+void Stack::push(Token* value)
 {
 	if (top == nullptr) {
-		top = new Node;
-		top->value = value;
+		top = new NodeStack;
+		top->token = value;
 		top->next = nullptr;
 		++capacity;
 	}
 	else {
-		Node* newTop = new Node;
-		newTop->value = value;
+		NodeStack* newTop = new NodeStack;
+		newTop->token = value;
 		newTop->next = top;
 		top = newTop;
 		++capacity;
 	}	
 }
 
-int Stack::pop(Stack * stack)
-{
-	if (top != nullptr) 
-	{
-		Node * newTop = top->next;
-		int result = top->value;
-		delete top;
-		top = newTop;
-		--capacity;
-		return result;
-	}
-	else
-		return 0;
-}
-
-int Stack::getTop(Stack * stack)
+void Stack::pop()
 {
 	if (top != nullptr)
 	{
-		return top->value;
-	}
-	else	
-		return 0;
-	
+		NodeStack* newTop = top->next;
+		delete top;
+		top = newTop;
+		--capacity;
+	}		
 }
 
-void Stack::printStack()
+Token* Stack::getTop()
 {
-	std::cout << "Current Stack:\n";
-	if (top == nullptr)
-		std::cout << "\0\n";
-	else
+	if (top != nullptr)
 	{
-		unsigned buf = capacity;
-		while (buf != 0)
-		{
-			std::cout << value << "\n";
-			top->next;
-		}
-	}
+		return operatorToken;
+	}	
 }
 
 /***********************************************************
 
 ************************************************************/
 
-Node::Node()
+NodeStack::NodeStack()
 {
 }
 
-Node::~Node()
+NodeStack::~NodeStack()
 {
 }
 
 /***********************************************************
 
 ************************************************************/
+
+NodeQueue::NodeQueue()
+{
+}
+
+NodeQueue::~NodeQueue()
+{
+}
